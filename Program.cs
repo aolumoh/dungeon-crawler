@@ -4,6 +4,37 @@
         private static int[] pathOptions;
         private static Player player = new Player();
 
+        private static List<string> treasures = new List<string> {
+             "Golden Goblet",
+            "Enchanted Amulet",
+            "Dragon’s Claw",
+            "Crystal Chalice",
+            "Ancient Scroll",
+            "Mystic Ring",
+            "Silver Dagger",
+            "Potion of Eternal Youth",
+            "Cursed Ruby",
+            "Gold Inlaid Sword"
+        };
+
+        private static List<string> monsters = new List<string> {
+            "Goblin Berserker",
+            "Shadow Wraith",
+            "Stone Golem",
+            "Venomous Basilisk",
+            "Minotaur Warrior",
+            "Spectral Banshee",
+            "Flame Imp",
+            "Frost Giant",
+            "Pizza Monster",
+            "Undead Lich",
+            "Chimera Beast",
+            "Doppelganger Assassin",
+            "Crystal Elemental",
+            "Abyssal Tentacle Beast",
+            "Enchanted Armor Sentinel"
+        };
+
         static void Main(string[] args) {
             player.OnMonsterEncounter += HandleMonsterEncounter;
             player.OnBattle += HandleBattle;
@@ -30,7 +61,7 @@
                     Console.WriteLine("Press any key to continue...");
                     Console.ReadKey();
                     pathOptions = GetPathOptions(); // This will regenerate new path options
-                    continue; 
+                    continue;
                 }
 
                 Console.WriteLine("Which of the following directions do you want to go?\n");
@@ -78,9 +109,11 @@
         // Event handlers
         // this handler is called when a monster is encountered
         public static void HandleMonsterEncounter() {
+            int monsterIndex = GetRandomNumber(null, monsters.Count - 1);
+            string currentMonster = monsters[monsterIndex];
             bool validInput = false;
 
-            Console.Write("\nYou encountered a monster! ");
+            Console.Write($"\nYou encountered a monster, it's a {currentMonster}! ");
             while (!validInput) { // loop the prompt until user gives a valid input
                 Console.WriteLine("Do you want to flee or fight?");
                 Console.WriteLine("1. Flee\n2. Fight");
@@ -88,11 +121,11 @@
                 int.TryParse(Console.ReadLine(), out int input);
 
                 if (input == 2) {
-                    player.CallBattle();
+                    player.CallBattle(currentMonster);
                     validInput = true;
                 } else if (input == 1) {
                     validInput = true;
-                    Console.WriteLine("\nYou ran and escaped the clutches of the pizza monster!");
+                    Console.WriteLine($"\nYou ran and escaped the clutches of the {currentMonster}!");
                 } else {
                     Console.WriteLine($"\n\"{input}\" is not a valid input");
                 }
@@ -101,38 +134,41 @@
         }
 
         // this handler in called if the player decided to fight the monster
-        public static void HandleBattle() {
+        public static void HandleBattle(string monsterName) {
             Random random = new Random();
             bool defeatedMonster = random.Next(0, 2) == 1; // 50% chance of defeating monster
 
+            int pointsGained = GetRandomNumber(null, 20); // the number of points that will be gained after defeating the monster
+            int healthLostDuringVictory = GetRandomNumber(null, 5);// the amount of health that will be lost after the battle if player won
+            int healthLostDuringDefeat = GetRandomNumber(10, 30);// the amount of health that will be lost after the battle if player lost
             if (defeatedMonster) {
-                player.Score += 20;
-                player.Health -= 5;
-                Console.WriteLine("You won the battle! You gained 20 points and lost only 5 hp");
+                player.Score += pointsGained;
+                player.Health -= healthLostDuringVictory;
+                Console.WriteLine($"You won the battle! You gained {pointsGained} points and lost only {healthLostDuringVictory} hp");
             } else {
-                player.Health -= 20;
-                Console.WriteLine("You were defeated by the monster, You lost 20 hp");
+                player.Health -= healthLostDuringDefeat;
+                Console.WriteLine($"You were defeated by the {monsterName}, You lost {healthLostDuringDefeat} hp");
             }
         }
 
         public static void HandleTrap() {
             Random random = new Random();
             bool avoidedTrap = random.Next(0, 2) == 1; // 50% chance of avoiding the trap
-
+            int healthLostFromTrap = GetRandomNumber(null, 20);
             if (avoidedTrap) {
                 Console.WriteLine("You avoided the trap, awesome reflexes! Keep going");
             } else {
-                player.Health -= 10;
-                Console.WriteLine("You were hurt by the trap, You lost 10 hp");
+                player.Health -= healthLostFromTrap;
+                Console.WriteLine($"You were hurt by the trap, You lost {healthLostFromTrap} hp");
             }
             Console.WriteLine($"Current Health: {player.Health} hp\nCurrent Score: {player.Score} points");
         }
 
         public static void HandleTreasure() {
-            Random random = new Random();
-            int value = random.Next(5, 51); // score increases by a random value between 5 and 50 inclusive
+            int value = GetRandomNumber(5, 50); // score increases by a random value between 5 and 50 inclusive
             player.Score += value;
-            Console.WriteLine($"You found some gold and elixirs, you also gained {value} points!");
+            int treasureIndex = GetRandomNumber(null, treasures.Count-1);
+            Console.WriteLine($"You found a {treasures[treasureIndex]}, you also gained {value} points!");
             Console.WriteLine($"Current Health: {player.Health} hp\nCurrent Score: {player.Score} points");
         }
 
@@ -143,6 +179,15 @@
                 Console.WriteLine("--GAME OVER--");
                 Console.WriteLine($"You finished with a total score of {player.Score} points!");
             }
+        }
+
+        // Method to generate a random number, max inclusive
+        public static int GetRandomNumber(int? min, int max) {
+            Random random = new Random();
+            if (min == null) {
+                return random.Next(max + 1);
+            }
+            return random.Next((int)min, (int)max);
         }
 
 
@@ -193,10 +238,3 @@
         }
     }
 }
-
-/*
- * make deadend do something
- * future improvements:
- * make a list of monster names and randomize each time a monster is encountered and display the name to the user when they flee or fight.
- * make sure player can never lose more health than they have?
- */

@@ -13,10 +13,11 @@ namespace Dungeon_Crawler {
 
         // declare delegates
         public delegate void DungeonEventDelegate();
+        public delegate void BattleEventDelegate(string monsterName);
 
         // declare events
         public event DungeonEventDelegate OnMonsterEncounter;
-        public event DungeonEventDelegate OnBattle;
+        public event BattleEventDelegate OnBattle;
         public event DungeonEventDelegate OnTrapTriggered;
         public event DungeonEventDelegate OnTreasureFound;
 
@@ -24,8 +25,8 @@ namespace Dungeon_Crawler {
         public void CallMonster() {
             OnMonsterEncounter?.Invoke();
         }
-        public void CallBattle() {
-            OnBattle?.Invoke();
+        public void CallBattle(string monsterName) {
+            OnBattle?.Invoke(monsterName);
         }
 
         public void CallTrap() {
