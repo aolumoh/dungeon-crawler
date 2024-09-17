@@ -12,3 +12,4 @@ C:\Users\a_olu\OneDrive\Documents\MITT\Advanced Topics in C#\Dungeon Crawler\obj
 C:\Users\a_olu\OneDrive\Documents\MITT\Advanced Topics in C#\Dungeon Crawler\obj\Debug\net8.0\Dungeon Crawler.pdb
 C:\Users\a_olu\OneDrive\Documents\MITT\Advanced Topics in C#\Dungeon Crawler\obj\Debug\net8.0\Dungeon Crawler.genruntimeconfig.cache
 C:\Users\a_olu\OneDrive\Documents\MITT\Advanced Topics in C#\Dungeon Crawler\obj\Debug\net8.0\ref\Dungeon Crawler.dll
+C:\Users\a_olu\OneDrive\Documents\MITT\Advanced Topics in C#\Dungeon Crawler\obj\Debug\net8.0\Dungeon Crawler.sourcelink.json
